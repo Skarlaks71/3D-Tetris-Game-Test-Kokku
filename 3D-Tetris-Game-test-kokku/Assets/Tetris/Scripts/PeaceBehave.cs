@@ -15,12 +15,14 @@ public class PeaceBehave : MonoBehaviour {
 	
 	void Awake()
 	{
+		//check who if the atual tetromio
 		if (GameObject.Find("AtualT").transform.childCount > 0)
 		{
 			transform.parent = GameObject.Find("PreviousT").transform;
 		}
 		else
 		{
+			//spawn preveious tetromio
 			transform.parent = GameObject.Find("AtualT").transform;
 			transform.position = GameObject.Find("SpawnPoint").transform.position;
 			GameObject.Find("Spawner").GetComponent<SpawnManager>().IsGround = true;
@@ -51,6 +53,7 @@ public class PeaceBehave : MonoBehaviour {
 				DeleteAllMatch();
 				enabled = false;
 				transform.parent = null;
+				//Find previous tetromio and set to atual tetromio and position
 				GameObject.Find("PreviousT").transform.GetChild(0).transform.position = GameObject.Find("SpawnPoint").transform.position;
 				GameObject.Find("PreviousT").transform.GetChild(0).GetComponent<PeaceBehave>().CanMove = true;
 				GameObject.Find("Spawner").GetComponent<SpawnManager>().IsGround = true;
@@ -90,6 +93,7 @@ public class PeaceBehave : MonoBehaviour {
 				DeleteAllMatch();
 				enabled = false;
 				transform.parent = null;
+				//Find previous tetromio and set to atual tetromio and position
 				GameObject.Find("PreviousT").transform.GetChild(0).transform.position = GameObject.Find("SpawnPoint").transform.position;
 				GameObject.Find("PreviousT").transform.GetChild(0).GetComponent<PeaceBehave>().CanMove = true;
 				GameObject.Find("Spawner").GetComponent<SpawnManager>().IsGround = true;
@@ -108,7 +112,7 @@ public class PeaceBehave : MonoBehaviour {
 		}
 	}
 
-	private void AddOnBoard()
+	private void AddOnBoard()//add peaces on board
 	{
 		foreach(Transform child in transform)
 		{
@@ -119,7 +123,7 @@ public class PeaceBehave : MonoBehaviour {
 		}
 	}
 
-	private bool ValidMove()
+	private bool ValidMove()//check if move is valid
 	{
 		foreach (Transform child in transform)
 		{
@@ -157,6 +161,7 @@ public class PeaceBehave : MonoBehaviour {
 		{
 			if (DetectMatch(y))
 			{
+				GUIManager.instance.AddScore();
 				DeleteRow(y);
 				DecreasePeaces(y);
 				--y;
