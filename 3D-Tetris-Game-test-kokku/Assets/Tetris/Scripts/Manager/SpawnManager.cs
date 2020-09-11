@@ -5,7 +5,12 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour {
 
 	public GameObject[] peaces;
+	public GameObject spawnPoint;
 	private bool _isGround = true;
+
+	public bool IsGround{
+		set { _isGround = value; }
+	}
 
 	// Update is called once per frame
 	void Update () {
@@ -17,6 +22,6 @@ public class SpawnManager : MonoBehaviour {
 	}
 	private void SpawnPeace()
 	{
-		Instantiate(peaces[Random.Range(0, peaces.Length)],new Vector3(0,13,0),Quaternion.identity);
+		Instantiate(peaces[Random.Range(0, peaces.Length)],transform.position,Quaternion.identity);
 	}
 }
