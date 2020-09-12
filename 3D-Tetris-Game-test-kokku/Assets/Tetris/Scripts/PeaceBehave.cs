@@ -5,17 +5,11 @@ using UnityEngine.Experimental.GlobalIllumination;
 
 public class PeaceBehave : MonoBehaviour {
 
-	private bool _canMove = false;
 	private float _lastTime = 0;
-
-	public bool CanMove
-	{
-		set { _canMove = value; }
-	}
 	
 	void Awake()
 	{
-		//check who if the atual tetromio
+		/*//check who if the atual tetromio
 		if (GameObject.Find("AtualT").transform.childCount > 0)
 		{
 			transform.parent = GameObject.Find("PreviousT").transform;
@@ -25,19 +19,29 @@ public class PeaceBehave : MonoBehaviour {
 			//spawn preveious tetromio
 			transform.parent = GameObject.Find("AtualT").transform;
 			transform.position = GameObject.Find("SpawnPoint").transform.position;
-			GameObject.Find("Spawner").GetComponent<SpawnManager>().IsGround = true;
+			SpawnManager.instance.SpawnCopy();
 			_canMove = true;
+		}*/
+	}
+
+	void Start()
+	{
+		if (!ValidMove())
+		{
+			Debug.Log("Game Over");
+			Destroy(gameObject);
+			GameManager.instance.GameOver = true;
 		}
 	}
 	// Update is called once per frame
 	void Update () {
-		if (_canMove)
-		{
+		
 			transform.parent = GameObject.Find("AtualT").transform;
 			Fall();
 			Movement();
 			RotationObject();
-		}
+		
+			
 		
 	}
 
@@ -53,10 +57,7 @@ public class PeaceBehave : MonoBehaviour {
 				DeleteAllMatch();
 				enabled = false;
 				transform.parent = null;
-				//Find previous tetromio and set to atual tetromio and position
-				GameObject.Find("PreviousT").transform.GetChild(0).transform.position = GameObject.Find("SpawnPoint").transform.position;
-				GameObject.Find("PreviousT").transform.GetChild(0).GetComponent<PeaceBehave>().CanMove = true;
-				GameObject.Find("Spawner").GetComponent<SpawnManager>().IsGround = true;
+				SpawnManager.instance.SpawnCopy();
 			}
 			_lastTime = Time.time;
 		}
@@ -76,14 +77,14 @@ public class PeaceBehave : MonoBehaviour {
 		//move right
 		if (Input.GetKeyDown(KeyCode.D))
 		{
-			transform.position += new Vector3(1, 0, 0);
+			transform.position += new Vector3(1, 0, 0) ;
 			if (!ValidMove())
 			{
 				transform.position += new Vector3(-1, 0, 0);
 			}
 		}
 		//Move Down
-		if (Input.GetKeyDown(KeyCode.S))
+		if (Input.GetKey(KeyCode.S) && transform.position.y >= 3)
 		{
 			transform.position += new Vector3(0, -1, 0);
 			if (!ValidMove())
@@ -93,10 +94,7 @@ public class PeaceBehave : MonoBehaviour {
 				DeleteAllMatch();
 				enabled = false;
 				transform.parent = null;
-				//Find previous tetromio and set to atual tetromio and position
-				GameObject.Find("PreviousT").transform.GetChild(0).transform.position = GameObject.Find("SpawnPoint").transform.position;
-				GameObject.Find("PreviousT").transform.GetChild(0).GetComponent<PeaceBehave>().CanMove = true;
-				GameObject.Find("Spawner").GetComponent<SpawnManager>().IsGround = true;
+				SpawnManager.instance.SpawnCopy();
 			}
 		}
 	}
@@ -174,6 +172,7 @@ public class PeaceBehave : MonoBehaviour {
 		for(int x = 0; x < Board.width; x++)
 		{
 			Destroy(Board.grid[x, y].gameObject);
+			GameManager.instance.effectSound.Play();
 			Board.grid[x, y] = null;
 		}
 		

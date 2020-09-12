@@ -2,24 +2,42 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Analytics;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GUIManager : MonoBehaviour {
 
 	public static GUIManager instance;
 
+	public Button optionBtn;
+	public GameObject gameOverPainel;
 	public GameObject scoreTxt;
+	public GameObject scoreOverTxt;
 	private int _score = 0;
 
 
 	// Use this for initialization
 	void Awake () {
 		instance = GetComponent<GUIManager>();
-		
+		if(SceneManager.GetActiveScene().name == "MainMenu")
+		{
+			scoreTxt = null;
+			optionBtn = null;
+			gameOverPainel = null;
+			scoreOverTxt = null;
+		}
 	}
+	
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if(GameManager.instance.GameOver == true){
+
+			GameManager.instance.GameOver = false;
+			GameOver();
+			
+		}
 	}
 
 	public void AddScore()
@@ -28,8 +46,25 @@ public class GUIManager : MonoBehaviour {
 		scoreTxt.GetComponent<TextMeshProUGUI>().text = _score.ToString();
 	}
 
-	public void Return()
+	private void ShowScore()
 	{
-		
+		scoreOverTxt.GetComponent<TextMeshProUGUI>().text = _score.ToString();
+	}
+
+	public void OpenSettings(bool full)
+	{
+		GameManager.instance.OpenSettings(full);
+	}
+	public void PauseGame()
+	{
+		Time.timeScale = 0;
+	}
+	private void GameOver()
+	{
+
+		optionBtn.enabled = false;
+		ShowScore();
+		gameOverPainel.SetActive(true);
+
 	}
 }

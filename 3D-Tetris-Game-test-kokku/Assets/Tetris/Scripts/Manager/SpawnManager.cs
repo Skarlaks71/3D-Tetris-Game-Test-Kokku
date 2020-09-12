@@ -4,24 +4,41 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour {
 
+	public static SpawnManager instance;
+
 	public GameObject[] peaces;
 	public GameObject spawnPoint;
-	private bool _isGround = true;
+	private int _peaceDrawn = 0;
 
-	public bool IsGround{
-		set { _isGround = value; }
+	void Awake()
+	{
+		instance = GetComponent<SpawnManager>();
 	}
 
+	void Start()
+	{
+		_peaceDrawn = Random.Range(0, peaces.Length);
+		SpawnCopy();
+	}
 	// Update is called once per frame
 	void Update () {
-		if (_isGround)
-		{
-			_isGround = false;
-			SpawnPeace();
-		}
+
 	}
-	private void SpawnPeace()
+	public void SpawnPeacePreview()
 	{
-		Instantiate(peaces[Random.Range(0, peaces.Length)],transform.position,Quaternion.identity);
+		_peaceDrawn = Random.Range(0, peaces.Length);
+		GameObject previousPeace = (GameObject)Instantiate(peaces[_peaceDrawn],transform.position,Quaternion.identity);
+		previousPeace.GetComponent<PeaceBehave>().enabled = false;
+		previousPeace.transform.parent = GameObject.Find("PreviousT").transform;
+	}
+
+	public void SpawnCopy()
+	{
+		Instantiate(peaces[_peaceDrawn], spawnPoint.transform.position, Quaternion.identity);
+		if(GameObject.Find("PreviousT").transform.childCount != 0)
+		{
+			Destroy(GameObject.Find("PreviousT").transform.GetChild(0).gameObject);
+		}
+		SpawnPeacePreview();
 	}
 }

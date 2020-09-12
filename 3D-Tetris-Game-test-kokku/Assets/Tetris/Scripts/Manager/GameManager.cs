@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour {
 
 	public static GameManager instance;
 
+	public AudioSource effectSound;
+	public GameObject optionsPainel;
 	public GameObject faderObj;
 	public Image faderImg;
 	private bool _gameOver = false;
@@ -20,6 +22,7 @@ public class GameManager : MonoBehaviour {
 	private AsyncOperation _async;
 
 	private bool _isReturning = false;
+	private bool _show = false;
 
 	#region GameOver and CurrentScene properts
 	public bool GameOver
@@ -83,11 +86,17 @@ public class GameManager : MonoBehaviour {
 
 	void Update()
 	{
+
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
 			ReturnToMenu();
 		}
 
+		if (_show == true)
+		{
+			Debug.Log("up");
+			
+		}
 	}
 
 	private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
@@ -103,10 +112,10 @@ public class GameManager : MonoBehaviour {
 			return;
 		}
 
-		if (CurrentSceneName != "Menu")
+		if (CurrentSceneName != "MainMenu")
 		{
 			StopAllCoroutines();
-			LoadScene("Menu");
+			LoadScene("MainMenu");
 			_isReturning = true;
 		}
 	}
@@ -142,5 +151,24 @@ public class GameManager : MonoBehaviour {
 			// Stop playing the scene
 			UnityEditor.EditorApplication.isPlaying = false;
 		#endif
+	}
+
+	public void OpenSettings(bool full)
+	{
+		if (full)
+		{
+			optionsPainel.SetActive(true);
+			optionsPainel.transform.GetChild(4).gameObject.SetActive(true);
+		}
+		else
+		{
+			optionsPainel.SetActive(true);
+		}
+		
+	}
+
+	public void ReturnGame()
+	{
+		Time.timeScale = 1;
 	}
 }
