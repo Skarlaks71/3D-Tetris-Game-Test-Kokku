@@ -7,22 +7,6 @@ public class PeaceBehave : MonoBehaviour {
 
 	private float _lastTime = 0;
 	
-	void Awake()
-	{
-		/*//check who if the atual tetromio
-		if (GameObject.Find("AtualT").transform.childCount > 0)
-		{
-			transform.parent = GameObject.Find("PreviousT").transform;
-		}
-		else
-		{
-			//spawn preveious tetromio
-			transform.parent = GameObject.Find("AtualT").transform;
-			transform.position = GameObject.Find("SpawnPoint").transform.position;
-			SpawnManager.instance.SpawnCopy();
-			_canMove = true;
-		}*/
-	}
 
 	void Start()
 	{
@@ -36,12 +20,9 @@ public class PeaceBehave : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-			transform.parent = GameObject.Find("AtualT").transform;
 			Fall();
 			Movement();
 			RotationObject();
-		
-			
 		
 	}
 
@@ -172,7 +153,7 @@ public class PeaceBehave : MonoBehaviour {
 		for(int x = 0; x < Board.width; x++)
 		{
 			Destroy(Board.grid[x, y].gameObject);
-			GameManager.instance.effectSound.Play();
+			GameManager.instance.gameObject.GetComponent<SoundManager>().effectAS.Play();
 			Board.grid[x, y] = null;
 		}
 		

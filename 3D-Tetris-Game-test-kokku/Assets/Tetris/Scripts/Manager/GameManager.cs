@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,11 +9,11 @@ public class GameManager : MonoBehaviour {
 
 	public static GameManager instance;
 
-	public AudioSource effectSound;
 	public GameObject optionsPainel;
 	public GameObject faderObj;
 	public Image faderImg;
 	private bool _gameOver = false;
+	private int _highScore;
 
 	[SerializeField]
 	private float _fadeSpeed = .02f;
@@ -22,13 +23,17 @@ public class GameManager : MonoBehaviour {
 	private AsyncOperation _async;
 
 	private bool _isReturning = false;
-	private bool _show = false;
 
 	#region GameOver and CurrentScene properts
 	public bool GameOver
 	{
 		set { _gameOver = value; }
 		get { return _gameOver; }
+	}
+
+	public int HighScore
+	{
+		get { return _highScore; }
 	}
 
 	public string CurrentSceneName
@@ -49,6 +54,14 @@ public class GameManager : MonoBehaviour {
 		else
 		{
 			Destroy(gameObject);
+		}
+		if (PlayerPrefs.GetInt("HighScore") != 0 || PlayerPrefs.GetInt("HighScore") > 0)
+		{
+			_highScore = PlayerPrefs.GetInt("HighScore");
+		}
+		else
+		{
+			_highScore = 0;
 		}
 	}
 
@@ -82,6 +95,7 @@ public class GameManager : MonoBehaviour {
 		_async.allowSceneActivation = false;
 		yield return _async;
 		_isReturning = false;
+	
 	}
 
 	void Update()
@@ -92,11 +106,11 @@ public class GameManager : MonoBehaviour {
 			ReturnToMenu();
 		}
 
-		if (_show == true)
+		if (Input.GetKeyDown(KeyCode.L))
 		{
-			Debug.Log("up");
-			
+			PlayerPrefs.SetInt("HighScore", 0);
 		}
+
 	}
 
 	private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
@@ -114,9 +128,11 @@ public class GameManager : MonoBehaviour {
 
 		if (CurrentSceneName != "MainMenu")
 		{
+			
 			StopAllCoroutines();
 			LoadScene("MainMenu");
 			_isReturning = true;
+			
 		}
 	}
 
@@ -153,12 +169,13 @@ public class GameManager : MonoBehaviour {
 		#endif
 	}
 
+	//ative painel settings of manager canvas
 	public void OpenSettings(bool full)
 	{
 		if (full)
 		{
 			optionsPainel.SetActive(true);
-			optionsPainel.transform.GetChild(4).gameObject.SetActive(true);
+			optionsPainel.transform.GetChild(5).gameObject.SetActive(true);
 		}
 		else
 		{
@@ -167,8 +184,15 @@ public class GameManager : MonoBehaviour {
 		
 	}
 
+	//return game time
 	public void ReturnGame()
 	{
 		Time.timeScale = 1;
+	}
+
+	public void AddHighScore(int score)
+	{
+		_highScore = score;
+		PlayerPrefs.SetInt("HighScore", _highScore);
 	}
 }

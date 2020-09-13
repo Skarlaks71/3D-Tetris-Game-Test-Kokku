@@ -13,6 +13,7 @@ public class GUIManager : MonoBehaviour {
 	public Button optionBtn;
 	public GameObject gameOverPainel;
 	public GameObject scoreTxt;
+	public GameObject highScoreTxt;
 	public GameObject scoreOverTxt;
 	private int _score = 0;
 
@@ -27,6 +28,11 @@ public class GUIManager : MonoBehaviour {
 			gameOverPainel = null;
 			scoreOverTxt = null;
 		}
+		else
+		{
+			highScoreTxt.GetComponent<TextMeshProUGUI>().text = GameManager.instance.HighScore.ToString();
+		}
+		
 	}
 	
 	
@@ -59,12 +65,22 @@ public class GUIManager : MonoBehaviour {
 	{
 		Time.timeScale = 0;
 	}
+
+	public void CallReturnToMenu()
+	{
+		GameManager.instance.ReturnToMenu();
+	}
 	private void GameOver()
 	{
 
 		optionBtn.enabled = false;
 		ShowScore();
 		gameOverPainel.SetActive(true);
-
+		if (GameManager.instance.HighScore <= _score)
+		{
+			GameManager.instance.AddHighScore(_score);
+		}
 	}
+
+
 }

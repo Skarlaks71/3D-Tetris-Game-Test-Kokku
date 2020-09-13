@@ -314,7 +314,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31beb027daa57554198d517202630e2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  optionBtn: {fileID: 0}
+  gameOverPainel: {fileID: 0}
   scoreTxt: {fileID: 0}
+  highScoreTxt: {fileID: 0}
+  scoreOverTxt: {fileID: 0}
 --- !u!114 &114370735900735114
 MonoBehaviour:
   m_ObjectHideFlags: 1
